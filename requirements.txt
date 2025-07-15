@@ -1,8 +1,9 @@
 pdfplumber
 pdf2image
 requests
-pinecone-client
+pinecone
 python-dotenv
 fastapi
 pydantic
 uvicorn
+python-multipart

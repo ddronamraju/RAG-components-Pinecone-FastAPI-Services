@@ -4,19 +4,25 @@ Description: Handles PDF ingestion, extracting text, images, and tables from PDF
 """
 import os
 from typing import List, Dict, Any
-
-# Placeholder imports for PDF processing
-# import pdfplumber
-# from pdf2image import convert_from_path
+import pdfplumber
 
 def extract_pdf_content(pdf_path: str) -> Dict[str, Any]:
     """
-    Extracts text, images, and tables from a PDF file.
+    Extracts text and tables from a PDF file. Ignores images.
     Returns a dictionary with keys: 'text', 'images', 'tables'.
     """
-    # TODO: Implement PDF extraction logic
+    text = ""
+    tables = []
+    with pdfplumber.open(pdf_path) as pdf:
+        for page in pdf.pages:
+            # Extract text
+            text += page.extract_text() or ""
+            # Extract tables
+            page_tables = page.extract_tables()
+            for table in page_tables:
+                tables.append(table)
     return {
-        'text': 'Extracted text here',
-        'images': ['image1_bytes', 'image2_bytes'],
-        'tables': ['table1_data', 'table2_data']
+        'text': text,
+        'images': [],  # Images ignored
+        'tables': tables
     }

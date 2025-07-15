@@ -7,14 +7,16 @@ import requests
 with open('sample.pdf', 'rb') as f:
     files = {'file': ('sample.pdf', f, 'application/pdf')}
     resp = requests.post('http://localhost:8000/ingest_pdf/', files=files)
-    pdf_content = resp.json()
+    print('Ingest PDF response:', resp.status_code, resp.text)
+    pdf_content = resp.json() if resp.headers.get('content-type', '').startswith('application/json') else {}
     print('PDF Content:', pdf_content)
 
 # 2. Vectorize extracted text (example: only text, but you can use images/tables as needed)
-texts = [pdf_content['text']]
+texts = [pdf_content.get('text', '')]
+print('Texts to vectorize:', texts)
 resp = requests.post('http://localhost:8001/vectorize/', json={'texts': texts})
-embeddings = resp.json()
-print('Embeddings:', embeddings)
+embeddings = resp.json() if resp.headers.get('content-type', '').startswith('application/json') else []
+print('Embeddings:', len(embeddings[0]))
 
 # 3. Upsert into Pinecone
 upsert_payload = {
@@ -23,12 +25,21 @@ upsert_payload = {
     'metadata': [{'source': 'sample.pdf'}]
 }
 resp = requests.post('http://localhost:8002/upsert/', json=upsert_payload)
-print('Upsert response:', resp.json())
+upsert_result = resp.json() if resp.headers.get('content-type', '').startswith('application/json') else {}
+print('Upsert result:', upsert_result)
 
-# 4. Query Pinecone
+# 4. Create embedding for a query string
+query_text = "rubber"
+print('Query text to vectorize:', query_text)
+query_embedding_resp = requests.post('http://localhost:8001/vectorize/', json={'texts': [query_text]})
+query_embedding = query_embedding_resp.json()[0] if query_embedding_resp.headers.get('content-type', '').startswith('application/json') else None
+print('Query embedding:', len(query_embedding))
+
+# 5. Query Pinecone
 query_payload = {
-    'vector': embeddings[0],
-    'top_k': 3
+    'vector': query_embedding,
+    'top_k': 1
 }
 resp = requests.post('http://localhost:8002/query/', json=query_payload)
-print('Query results:', resp.json())
+# query_result = resp.json() if resp.headers.get('content-type', '').startswith('application/json') else {}
+print('Query result done')

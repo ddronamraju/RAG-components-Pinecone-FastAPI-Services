@@ -25,10 +25,23 @@ This project implements a modular Retrieval-Augmented Generation (RAG) pipeline 
    - Edit `.env` and add your Hugging Face and Pinecone API keys and configuration.
 
 3. **Run FastAPI services:**
-   Open three terminals and run each service:
+   Open three separate terminals and run each service (activate the virtual environment in each terminal first):
+   
+   **Terminal 1:**
    ```powershell
+   .\venv\Scripts\Activate
    uvicorn data_ingestion_service:app --reload --port 8000
+   ```
+   
+   **Terminal 2:**
+   ```powershell
+   .\venv\Scripts\Activate
    uvicorn vectorization_service:app --reload --port 8001
+   ```
+   
+   **Terminal 3:**
+   ```powershell
+   .\venv\Scripts\Activate
    uvicorn retrieval_service:app --reload --port 8002
    ```
 
