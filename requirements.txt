@@ -1,0 +1,8 @@
+pdfplumber
+pdf2image
+requests
+pinecone-client
+python-dotenv
+fastapi
+pydantic
+uvicorn
