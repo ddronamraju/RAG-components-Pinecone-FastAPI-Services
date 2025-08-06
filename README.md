@@ -1,4 +1,4 @@
-# Agentic RAG with Pinecone & FastAPI
+# Modular RAG with Pinecone & FastAPI
 
 This project implements a modular Retrieval-Augmented Generation (RAG) pipeline using FastAPI, Pinecone, and Hugging Face API endpoints. It supports PDF ingestion (including text, images, tables), vectorization, and retrieval, with each functionality in a separate module and service.
 
